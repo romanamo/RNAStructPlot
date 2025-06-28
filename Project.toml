@@ -1,0 +1,13 @@
+name = "RNAStructPlot"
+uuid = "09f533d0-5e57-4da6-a4df-b932ea6c1b12"
+authors = ["romanamo"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1.6.7"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
