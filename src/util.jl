@@ -3,34 +3,6 @@ using Graphs
 using Makie
 
 """
-$(SIGNATURES)
-
-Constructs a graph, and a dictionary based on a RNA `sequence`
-with pairing in `structure` given by the dot bracket notation.
-
-The dictionary maps each vertex number to a nucleotide.
-"""
-function dotbracket(sequence::String, structure::String)
-    graph = complete_graph(0)
-    add_vertices!(graph, length(sequence))
-    buffer = []
-    for (i, c) in enumerate(structure)
-        if c == '('
-            push!(buffer, i)
-        elseif c == ')' 
-            j = pop!(buffer)
-            success = add_edge!(graph, i, j)
-        end
-        # add each neighboring vertex
-        if i != 1
-            add_edge!(graph, i, i-1)
-        end
-    end
-    mapping = Dict( i => v for (i,v) in enumerate(sequence))
-    return graph, mapping
-end
-
-"""
 Default coloring for nucleotide bases.
 """
 const nucleotide_colors::Dict{Char,Any} = Dict('A' => :red,'G' => :cyan,'C' => :yellow,'U' => :lime)
@@ -72,7 +44,7 @@ function draw_final(graph::Graph, coords::Dict, mapping::Dict, pairing::Dict;col
     end
     # draw numbering labels
     for i in vcat([1], collect(range(0,nv(graph), step=5)))
-        if has_vertex(graph, i)
+        if has_vertex(graph, i) && haskey(coords, i)
             text!(coords[i][1], coords[i][2],text=string(i),align=(:center, :top))
         end
     end
@@ -80,3 +52,4 @@ function draw_final(graph::Graph, coords::Dict, mapping::Dict, pairing::Dict;col
     hidedecorations!(ax)
     current_figure()
 end
+
