@@ -84,6 +84,14 @@ function haspair(rnabase::RNABaseGraph, a::Int64, b::Int64)
     return haskey(rnabase.pairings, i) && rnabase.pairings[i] == j
 end
 
+function hasexactpair(rnabase::RNABaseGraph, a::Int64, b::Int64)
+    return haskey(rnabase.pairings, a) && rnabase.pairings[a] == b
+end
+
+function hasexactpair(rnabase::RNATreeGraph, a::Int64, b::Int64)
+    return haskey(rnabase.pairings, a) && rnabase.pairings[a] == b
+end
+
 function bondstrength(rnabase, a::Int64, b::Int64)
     ibase, jbase = rnabase.nucleotides[a], rnabase.nucleotides[b]
     low, high = sort([ibase, jbase])

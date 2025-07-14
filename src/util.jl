@@ -45,7 +45,7 @@ function draw_final(graph::Graph, coords::Dict, mapping::Dict, pairing::Dict;col
     # draw numbering labels
     for i in vcat([1], collect(range(0,nv(graph), step=5)))
         if has_vertex(graph, i) && haskey(coords, i)
-            text!(coords[i][1], coords[i][2],text=string(i),align=(:center, :top))
+            text!(labels[1], labels[i][2],text=string(i),align=(:center, :top))
         end
     end
     hidespines!(ax)
@@ -53,3 +53,20 @@ function draw_final(graph::Graph, coords::Dict, mapping::Dict, pairing::Dict;col
     current_figure()
 end
 
+"""
+$(SIGNATURES)
+
+Bezier Curve of order 1.
+"""
+function bezier1(p1, p2)
+    return t -> (1-t)*p1 + t*p2
+end
+
+"""
+$(SIGNATURES)
+
+Bezier Curve of order 2.
+"""
+function bezier2(p1, p2, p3)
+    return t -> (1-t)*((1-t)*p1+t*p2) + t*((1-t)*p2+t*p3)
+end
