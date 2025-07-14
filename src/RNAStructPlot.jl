@@ -12,7 +12,7 @@ export gencircular
 
 export RNABaseGraph, RNATreeGraph
 
-export dotbracketbase, dotbrackettree, findregionstarts, findregion
+export dotbracketbase, dotbrackettree, findregionstarts, findregion, haspair, bondstrength
 export drawpolygonal
 
 end

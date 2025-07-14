@@ -55,7 +55,7 @@ struct RNATreeGraph
     "list of bases (values) belonging to a vertex (key)"
     loopbases::Dict{Any, Vector{Any}}
     "bases paired by hydrogen bonds (lower index as key)"
-    pairings::Dict{Any, Any}
+    pairings::Dict{Int64, Any}
     "mapping for base graph to Nucleotides A,U,G,C"
     nucleotides::Dict{Any, Char}
 end
@@ -77,6 +77,19 @@ function findregion(rnatree::RNATreeGraph, pair::Tuple{Any, Any})
         end
     end
     return missing
+end
+
+function haspair(rnabase::RNABaseGraph, a::Int64, b::Int64)
+    i, j = min(a, b), max(a, b)
+    return haskey(rnabase.pairings, i) && rnabase.pairings[i] == j
+end
+
+function bondstrength(rnabase, a::Int64, b::Int64)
+    ibase, jbase = rnabase.nucleotides[a], rnabase.nucleotides[b]
+    low, high = sort([ibase, jbase])
+    strengths = Dict(('A', 'U') => 2, ('C', 'G') => 3, ('U', 'G') => 1)
+
+    return get(strengths, (low, high), 0)
 end
 
 """
