@@ -79,18 +79,23 @@ function findregion(rnatree::RNATreeGraph, pair::Tuple{Any, Any})
     return missing
 end
 
-function haspair(rnabase::RNABaseGraph, a::Int64, b::Int64)
+function haspair(rnabase::Union{RNABaseGraph, RNATreeGraph}, a::Int64, b::Int64)
     i, j = min(a, b), max(a, b)
     return haskey(rnabase.pairings, i) && rnabase.pairings[i] == j
 end
 
-function hasexactpair(rnabase::RNABaseGraph, a::Int64, b::Int64)
+function hasexactpair(rnabase::Union{RNABaseGraph, RNATreeGraph}, a::Int64, b::Int64)
     return haskey(rnabase.pairings, a) && rnabase.pairings[a] == b
 end
 
-function hasexactpair(rnabase::RNATreeGraph, a::Int64, b::Int64)
-    return haskey(rnabase.pairings, a) && rnabase.pairings[a] == b
-end
+# function hasexactpair(rnabase::RNATreeGraph, a::Int64, b::Int64)
+#     return haskey(rnabase.pairings, a) && rnabase.pairings[a] == b
+# end
+
+# function haspair(rnabase::RNATreeGraph, a::Int64, b::Int64)
+#     i, j = min(a, b), max(a, b)
+#     return haskey(rnabase.pairings, i) && rnabase.pairings[i] == j
+# end
 
 function bondstrength(rnabase, a::Int64, b::Int64)
     ibase, jbase = rnabase.nucleotides[a], rnabase.nucleotides[b]

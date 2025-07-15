@@ -31,7 +31,7 @@ function drawgeneric(
         edgecolor = ispair ? bondcolor : :black
         strength = showstrength && ispair ? bondstrength(rnastruct, src(e), dst(e)) : 0
 
-        lines!([sx, dx], [sy, dy];linestyle=(:dash, strength^1.8),color=edgecolor)
+        lines!([sx, dx], [sy, dy];linestyle=(:dash, strength^1.2),color=edgecolor)
     end
 
     # draw vertices with specified coloring

@@ -6,7 +6,7 @@ Circle, defined by radius and center
 
 $(TYPEDFIELDS)
 """
-struct Circle
+struct LoopCircle
     radius::Number
     center::Vector{Number}
 end

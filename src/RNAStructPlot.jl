@@ -8,6 +8,7 @@ include("advanced.jl")
 include("circular.jl")
 include("data.jl")
 include("plot.jl")
+include("shapes.jl")
 
 
 export drawgeneric
@@ -21,5 +22,5 @@ export drawpolygonal
 export DrawResult
 
 export bezier1, bezier2
-
+export LoopCircle
 end
