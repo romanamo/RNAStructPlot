@@ -29,7 +29,7 @@ function drawgeneric(
         # change style if bases are paired
         ispair = haspair(rnastruct, src(e), dst(e))
         edgecolor = ispair ? bondcolor : :black
-        strength = showstrength && ispair ? bondstrength(rnastruct, src(e), dst(e)) : 0
+        strength = showstrength && ispair ? (3 - bondstrength(rnastruct, src(e), dst(e))) : 0
 
         lines!([sx, dx], [sy, dy];linestyle=(:dash, strength^1.2),color=edgecolor)
     end
