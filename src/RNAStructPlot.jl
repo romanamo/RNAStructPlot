@@ -1,26 +1,11 @@
 module RNAStructPlot
 
+export Util, Parse, Recipes, Layouts
+
 # Write your package code here.
 include("util.jl")
 include("parse.jl")
-include("polygonal.jl")
-include("advanced.jl")
-include("circular.jl")
-include("data.jl")
-include("plot.jl")
-include("shapes.jl")
+include("Layouts/layouts.jl")
+include("recipes/recipes.jl")
 
-
-export drawgeneric
-export gencircular
-
-export RNABaseGraph, RNATreeGraph
-
-export dotbracketbase, dotbrackettree, findregionstarts, findregion, haspair, bondstrength, hasexactpair
-export drawpolygonal
-
-export DrawResult
-
-export bezier1, bezier2
-export LoopCircle
 end

@@ -1,5 +1,13 @@
-"""
+module Parse
 
+using DocStringExtensions
+using Graphs
+
+export RNABaseGraph, RNATreeGraph
+export haspair, hasexactpair, findpairing
+export dotbracketbase
+
+"""
 $(SIGNATURES)
 
 Constructs a Dictionary based on a input `structure`,
@@ -8,7 +16,7 @@ containing base coordsairs. Smaller indices are keys, higher ones values.
 # Example
 
 ```julia
-julia> rna_pairs("(())")
+julia> rnapairs("(())")
 Dict{Int64, Int64} with 2 entries:
   2 => 3
   1 => 4
@@ -29,20 +37,6 @@ function rnapairs(structure::String)
 end
 
 """
-RNABaseGraph
-
-$(TYPEDFIELDS)
-"""
-struct RNABaseGraph
-    "underlying base graph"
-    graph::Graph
-    "mapping for base graph to Nucleotides A,U,G,C"
-    nucleotides::Dict{Any, Char}
-    "bases paired by hydrogen bonds (lower index as key)"
-    pairings::Dict{Any, Any}
-end
-
-"""
 RNATreeGraph
 
 $(TYPEDFIELDS)
@@ -54,50 +48,34 @@ struct RNATreeGraph
     regionpairs::Dict{Tuple{Any, Any}, Vector{Tuple{Any, Any}}}
     "list of bases (values) belonging to a vertex (key)"
     loopbases::Dict{Any, Vector{Any}}
-    "bases paired by hydrogen bonds (lower index as key)"
-    pairings::Dict{Int64, Any}
+end
+
+"""
+RNABaseGraph
+
+$(TYPEDFIELDS)
+"""
+struct RNABaseGraph
+    "underlying base graph"
+    graph::Graph
     "mapping for base graph to Nucleotides A,U,G,C"
     nucleotides::Dict{Any, Char}
+    "bases paired by hydrogen bonds (lower index as key)"
+    pairings::Dict{Any, Any}
+    "corresponding tree graph"
+    tree::RNATreeGraph
 end
 
-function findregionstarts(rnatree::RNATreeGraph, treevertex::Any)
-    regionstarts = []
-    for vertex in rnatree.loopbases[treevertex]
-        if haskey(rnatree.pairings, vertex)
-            push!(regionstarts, (vertex, rnatree.pairings[vertex]))
-        end
-    end
-    return regionstarts
-end
-
-function findregion(rnatree::RNATreeGraph, pair::Tuple{Any, Any})
-    for (k, v) in rnatree.regionpairs
-        if pair in v
-            return k, v
-        end
-    end
-    return missing
-end
-
-function haspair(rnabase::Union{RNABaseGraph, RNATreeGraph}, a::Int64, b::Int64)
+function haspair(rnabase::RNABaseGraph, a::Int64, b::Int64)
     i, j = min(a, b), max(a, b)
     return haskey(rnabase.pairings, i) && rnabase.pairings[i] == j
 end
 
-function hasexactpair(rnabase::Union{RNABaseGraph, RNATreeGraph}, a::Int64, b::Int64)
+function hasexactpair(rnabase::RNABaseGraph, a::Int64, b::Int64)
     return haskey(rnabase.pairings, a) && rnabase.pairings[a] == b
 end
 
-# function hasexactpair(rnabase::RNATreeGraph, a::Int64, b::Int64)
-#     return haskey(rnabase.pairings, a) && rnabase.pairings[a] == b
-# end
-
-# function haspair(rnabase::RNATreeGraph, a::Int64, b::Int64)
-#     i, j = min(a, b), max(a, b)
-#     return haskey(rnabase.pairings, i) && rnabase.pairings[i] == j
-# end
-
-function bondstrength(rnabase, a::Int64, b::Int64)
+function bondstrength(rnabase::RNABaseGraph, a::Int64, b::Int64)
     ibase, jbase = rnabase.nucleotides[a], rnabase.nucleotides[b]
     low, high = sort([ibase, jbase])
     strengths = Dict(('A', 'U') => 2, ('C', 'G') => 3, ('U', 'G') => 1)
@@ -105,33 +83,13 @@ function bondstrength(rnabase, a::Int64, b::Int64)
     return get(strengths, (low, high), 0)
 end
 
-"""
-$(SIGNATURES)
-
-Constructs a pseudoknot-free `RNABaseGraph`.
-"""
-function dotbracketbase(rnasequence::String, notation::String)::RNABaseGraph
-    basegraph = complete_graph(0)
-    add_vertices!(basegraph, length(rnasequence))
-
-    bracketstack = []
-    pairings = []
-    for (i, c) in enumerate(notation)
-        # connect edges that are paired by hydrogen bonds
-        if c == '('
-            push!(bracketstack, i)
-        elseif c == ')'
-            j = pop!(bracketstack)
-            add_edge!(basegraph, i, j)
-            push!(pairings, (j, i))
-        end
-        # connect edges for each neighboring vertex (in total: 1-2-3-...-n)
-        if i != 1
-            add_edge!(basegraph, i, i-1)
+function findpairing((p1, p2), pairings)
+    for (k, v) in pairings
+        if (p1, p2) in v
+            return k, v
         end
     end
-    nucleotides = Dict( i => v for (i,v) in enumerate(rnasequence))
-    return RNABaseGraph(basegraph, nucleotides, Dict(pairings))
+    return missing
 end
 
 """
@@ -139,12 +97,10 @@ $(SIGNATURES)
 
 Constructs a pseudoknot-free `RNATreeGraph`.
 """
-function dotbrackettree(rnasequence::String, notation::String)::RNATreeGraph
+function dotbrackettree(rnasequence::String, notation::String, pairs)::RNATreeGraph
     treegraph = complete_graph(0)
-    pairs = rnapairs(notation)
-    nucleotides = Dict( i => v for (i,v) in enumerate(rnasequence))
-
     lastv(graph) = maximum(vertices(graph))
+    
     edges_info = Dict()
     vertices_info = Dict()
 
@@ -188,5 +144,37 @@ function dotbrackettree(rnasequence::String, notation::String)::RNATreeGraph
         end
     end
     dotbrackettree(1, length(notation), nothing)
-    return RNATreeGraph(treegraph, edges_info, vertices_info, pairs, nucleotides)
+    return RNATreeGraph(treegraph, edges_info, vertices_info)
+end
+
+"""
+$(SIGNATURES)
+
+Constructs a pseudoknot-free `RNABaseGraph`.
+"""
+function dotbracketbase(rnasequence::String, notation::String)::RNABaseGraph
+    basegraph = complete_graph(0)
+    add_vertices!(basegraph, length(rnasequence))
+
+    bracketstack = []
+    pairings = []
+    for (i, c) in enumerate(notation)
+        # connect edges that are paired by hydrogen bonds
+        if c == '('
+            push!(bracketstack, i)
+        elseif c == ')'
+            j = pop!(bracketstack)
+            add_edge!(basegraph, i, j)
+            push!(pairings, (j, i))
+        end
+        # connect edges for each neighboring vertex (in total: 1-2-3-...-n)
+        if i != 1
+            add_edge!(basegraph, i, i-1)
+        end
+    end
+    nucleotides = Dict( i => v for (i,v) in enumerate(rnasequence))
+    tree = dotbrackettree(rnasequence, notation, Dict(pairings))
+    return RNABaseGraph(basegraph, nucleotides, Dict(pairings), tree)
+end
+
 end
