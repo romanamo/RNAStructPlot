@@ -69,4 +69,15 @@ function intersection(m, c, x1, y1)
     return [x2, y2]
 end
 
+"""
+$(SIGNATURES)
+
+Calculates a vector of points on a squished arc with center at `(x, y)` 
+and dimensions of `(width, height)`.
+The vector contains `precision` elements.
+"""
+function squishedarc(x=0.0, y=0.0,width=1.0,height=1.0,precision=32)
+    return [[width * cos(angle) , height * sin(angle)] + [x, y] for angle in range(0, pi, precision)]
+end
+
 end

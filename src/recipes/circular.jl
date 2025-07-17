@@ -1,5 +1,6 @@
 using Makie
 using Graphs
+using DocStringExtensions
 
 using ...RNAStructPlot.Parse
 using ...RNAStructPlot.Layouts

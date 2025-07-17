@@ -1,5 +1,6 @@
 using Makie
 using Graphs
+using DocStringExtensions
 
 using ...RNAStructPlot.Parse
 using ...RNAStructPlot.Layouts
@@ -23,7 +24,6 @@ using ...RNAStructPlot.Util
     "Bond color if bond cannot isnt usual bond"
     bond_default_color=:gray
 end
-
 
 function Makie.plot!(ssg::StructurePlot{<:Tuple{RNABaseGraph}})
 
