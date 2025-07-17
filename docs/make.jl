@@ -2,7 +2,7 @@ using Documenter
 using RNAStructPlot
 
 makedocs(
-    sitename="PhyloPlot",
+    sitename="RNAStructPlot",
     remotes = nothing,
     format = Documenter.HTML(
         prettyurls = get(ENV, "CI", nothing) == "true",

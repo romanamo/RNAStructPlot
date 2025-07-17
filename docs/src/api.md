@@ -10,6 +10,6 @@ Order = [:module, :function, :type]
 ## Internals
 
 ```@autodocs
-Modules = [Layouts, Parse, RNAStruct, Util]
+Modules = [Layouts, Parse, Util]
 Order = [:module, :function, :type]
 ```

@@ -7,7 +7,7 @@ Currently `RNAStructPlot` is not available on the Julia Registry.
 It can be added as Development Dependency via the `dev` command. Download the repository and put it inside the `.julia/dev` folder. Then add it inside the Pkg REPL-Mode
 
 ```
-add RNAStructPlot
+dev RNAStructPlot
 ```
 
 ## Guide
