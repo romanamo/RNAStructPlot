@@ -6,6 +6,7 @@ using LinearAlgebra
 export normalizeangle, anglebetween
 export paramline, intersection
 export bezier1, bezier2
+export squishedarc
 
 """
 $(SIGNATURES)

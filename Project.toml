@@ -9,7 +9,6 @@ DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
-Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
 
 [compat]
 CairoMakie = "0.15.2"
@@ -17,7 +16,6 @@ DocStringExtensions = "0.9.5"
 Graphs = "1.13.0"
 LinearAlgebra = "1.11.0"
 Makie = "0.24.2"
-Revise = "3.8.0"
 julia = "1.6.7"
 
 [extras]
