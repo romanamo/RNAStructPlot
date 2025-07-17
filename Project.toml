@@ -14,7 +14,7 @@ Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
 CairoMakie = "0.15.2"
 DocStringExtensions = "0.9.5"
 Graphs = "1.13.0"
-LinearAlgebra = "1.11.0"
+LinearAlgebra = "< 0.0.1, 1"
 Makie = "0.24.2"
 
 [extras]
