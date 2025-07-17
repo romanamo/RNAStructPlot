@@ -29,3 +29,17 @@ rnastruct = Parse.dotbracketbase(sequence, notation)
 ```
 
 The created structure `rnastruct` will be available for all visualizations types.
+
+```julia
+f = Figure()
+ax = Axis(f[1,1], title="Modified Struct Plot", aspect=DataAspect())
+
+Recipes.structureplot!(f[1,1], rnastruct, layout=:modified)
+
+hidedecorations!(ax)
+hidespines!(ax)
+
+f
+```
+
+![modified](./img/modified.png)

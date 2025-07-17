@@ -64,7 +64,7 @@ hidespines!(ax)
 
 f
 ```
-![modified](./img/polygon.png.png)
+![modified](./img/polygon.png)
 
 ## Non Overlapping Layout
 
