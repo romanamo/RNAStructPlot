@@ -18,6 +18,11 @@ struct LoopCircle
     center::Vector{Number}
 end
 
+"""
+$(SIGNATURES)
+
+Determines the size of a modular interval
+"""
 function intervalsize(start, stop, n)
     size = stop-start
     if size < 0

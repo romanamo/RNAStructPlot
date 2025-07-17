@@ -1,21 +1,37 @@
 using Makie
 using Graphs
+using DocStringExtensions
 
 using ...RNAStructPlot.Parse
 using ...RNAStructPlot.Layouts
 using ...RNAStructPlot.Util
 
 @recipe ArcPlot begin
+    "Layout colors as Tuple for bases (A, C, G, U)"
     base_acgu_color=(:red, :cyan, :yellow, :lime)
+    "Toggle sequence start arrow"
     showstart=true
+    "Toggle base numbering"
     shownumbering=true
+    "Define distance between numberings"
     numberinterval=10
+    "Bond colors as Tuple for Bonds (AU, CG, GU)"
     bond_au_cg_gu_color=(:red, :red, :red)
+    "Bond widths as Tuple for Bonds (AU, CG, GU)"
     bond_au_cg_gu_width=(2, 2, 2)
+    "Bond color if bond cannot isnt usual bond"
     bond_default_color=:gray
+    "Horizontal and vertical Squish/Stretch factor"
     squish=(1.0, 1.0)
 end
 
+"""
+$(SIGNATURES)
+
+Calculates a vector of points on a squished arc with center at `(x, y)` 
+and dimensions of `(width, height)`.
+The vector contains `precision` elements.
+"""
 function squishedarc(x=0.0, y=0.0,width=1.0,height=1.0,precision=32)
     return [[width * cos(angle) , height * sin(angle)] + [x, y] for angle in range(0, pi, precision)]
 end

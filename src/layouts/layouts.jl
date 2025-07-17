@@ -1,5 +1,15 @@
 module Layouts
-    
+
+using DocStringExtensions
+
+"""
+DrawResult
+
+Container holding information about the layout calculation 
+for the secondary structure.
+
+$(TYPEDFIELDS)
+"""
 struct DrawResult
     "position of vertices"
     coords::Dict{Any, Any}

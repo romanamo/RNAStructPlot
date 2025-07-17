@@ -6,13 +6,21 @@ using ...RNAStructPlot.Layouts
 using ...RNAStructPlot.Util
 
 @recipe CirclePlot begin
+    "Layout options (:standard, :curves)"
     layout = :standard #:curves
+    "Layout colors as Tuple for bases (A, C, G, U)"
     base_acgu_color=(:red, :cyan, :yellow, :lime)
+    "Toggle sequence start arrow"
     showstart=true
+    "Toggle base numbering"
     shownumbering=true
+    "Define distance between numberings"
     numberinterval=10
-    bond_ac_cg_gu_color=(:red, :red, :red)
-    bond_ac_cg_gu_width=(2, 2, 2)
+    "Bond colors as Tuple for Bonds (AU, CG, GU)"
+    bond_au_cg_gu_color=(:red, :red, :red)
+    "Bond widths as Tuple for Bonds (AU, CG, GU)"
+    bond_au_cg_gu_width=(2, 2, 2)
+    "Bond color if bond cannot isnt usual bond"
     bond_default_color=:gray
 end
 
@@ -24,12 +32,12 @@ function Makie.plot!(ssg::CirclePlot{<:Tuple{RNABaseGraph}})
     end
 
     # calculate styles
-    style_input = [:base_acgu_color, :bond_ac_cg_gu_color, :bond_ac_cg_gu_width]
+    style_input = [:base_acgu_color, :bond_au_cg_gu_color, :bond_au_cg_gu_width]
     style_output = [:a_color, :c_color, :g_color, :u_color, :au_color, :cg_color, :gu_color, :basecolors, :au_width, :cg_width, :gu_width]
 
-    map!(ssg.attributes, style_input, style_output) do base_acgu_color, bond_ac_cg_gu_color, bond_ac_cg_gu_width
+    map!(ssg.attributes, style_input, style_output) do base_acgu_color, bond_au_cg_gu_color, bond_au_cg_gu_width
         basecolors = Dict(b => base_acgu_color[i] for (i, b) in enumerate("ACGU"))
-        return (base_acgu_color..., bond_ac_cg_gu_color..., basecolors, bond_ac_cg_gu_width...)
+        return (base_acgu_color..., bond_au_cg_gu_color..., basecolors, bond_au_cg_gu_width...)
     end
 
     # calculate edges

@@ -66,23 +66,31 @@ struct RNABaseGraph
     tree::RNATreeGraph
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Determines if the structure has a base pair (order doesnt matter)
+"""
 function haspair(rnabase::RNABaseGraph, a::Int64, b::Int64)
     i, j = min(a, b), max(a, b)
     return haskey(rnabase.pairings, i) && rnabase.pairings[i] == j
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Determines if the structure has a base pair (order does matter)
+"""
 function hasexactpair(rnabase::RNABaseGraph, a::Int64, b::Int64)
     return haskey(rnabase.pairings, a) && rnabase.pairings[a] == b
 end
 
-function bondstrength(rnabase::RNABaseGraph, a::Int64, b::Int64)
-    ibase, jbase = rnabase.nucleotides[a], rnabase.nucleotides[b]
-    low, high = sort([ibase, jbase])
-    strengths = Dict(('A', 'U') => 2, ('C', 'G') => 3, ('U', 'G') => 1)
 
-    return get(strengths, (low, high), 0)
-end
+"""
+$(TYPEDSIGNATURES)
 
+Finds other base pairs in same stem with `(p1, p2)` using stems `pairings` to search. 
+"""
 function findpairing((p1, p2), pairings)
     for (k, v) in pairings
         if (p1, p2) in v
