@@ -66,6 +66,7 @@ function layoutpolygonal(rnabase::RNABaseGraph;sidelength::Float64=1.0,stemlengt
 
     coords = Dict()
     numberings = Dict()
+    seenpairs = []
     
     start = minimum(vertices(rnabase.graph))
 
@@ -73,7 +74,6 @@ function layoutpolygonal(rnabase::RNABaseGraph;sidelength::Float64=1.0,stemlengt
         loop = loops[treevertex]
         loopsize = length(loop)
         polygonpoints = points(polygon)
-
         # set base pair in loop to corner in polygon
         for (i, v) in enumerate(loop)
             coords[v] = polygonpoints[i]
@@ -88,8 +88,9 @@ function layoutpolygonal(rnabase::RNABaseGraph;sidelength::Float64=1.0,stemlengt
             current = loop[i%loopsize+1]
             next = loop[(i+1)%loopsize+1]
 
+            low, high = min(current, next), max(current, next)
             # check if pair is the beginning of region stem, if yes draw it
-            if hasexactpair(rnabase, current, next)
+            if hasexactpair(rnabase, current, next) && !((low, high) in seenpairs)
                 (from, to), stempairs = findpairing((current, next), stem)
                 layoutstem(from, to, current, next, stempairs, polygon)
             end
@@ -107,6 +108,8 @@ function layoutpolygonal(rnabase::RNABaseGraph;sidelength::Float64=1.0,stemlengt
 
             numberings[high] = coords[high] + (coords[high] - coords[low])/2
             numberings[low] = coords[low] + (coords[low] - coords[high])/2
+            
+            push!(seenpairs, (low, high))
         end
 
         # prepare next loop attached to region stem

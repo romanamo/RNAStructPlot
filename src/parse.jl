@@ -134,7 +134,7 @@ function dotbrackettree(rnasequence::String, notation::String, pairs)::RNATreeGr
                 region_pairs = []
                 push!(region_pairs, (rfirst, rlast))
                 # walk along region until the next loop is reached
-                while notation[rfirst+1] == '(' && notation[rlast-1] == ')' && rfirst < rlast
+                while notation[rfirst+1] == '(' && notation[rlast-1] == ')' && pairs[rfirst+1] == rlast-1 && rfirst < rlast
                     rfirst += 1
                     rlast -= 1
                     push!(region_pairs, (rfirst, rlast))

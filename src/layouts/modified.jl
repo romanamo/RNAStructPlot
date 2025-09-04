@@ -50,20 +50,20 @@ function layoutmodified(rnabase::RNABaseGraph;sidelength=1.0,stemlength=0.5)
     coords = Dict(v => [0.0, 0.0] for v in vertices(rnabase.graph))
     numberings = Dict(v => [0.0, 0.0] for v in vertices(rnabase.graph))
 
+    seenpairs = []
+
     function layoutloop(treevertex, circle)
         loop = loops[treevertex]
         loopsize = length(loop)
 
-        # special case if loop only exists out of region stem pair
-        considerations = loopsize <= 2 ? 0 : loopsize-1 
-
         # loop through possible pairs attached to loop and calculate their layout 
-        for i in range(0, considerations)
+        for i in range(0, loopsize-1 )
             current = loop[i%loopsize+1]
             next = loop[(i+1)%loopsize+1]
 
-            
-            if hasexactpair(rnabase, current, next)
+            low, high = min(current, next), max(current, next)
+
+            if hasexactpair(rnabase, current, next) && !((low, high) in seenpairs)
                 (from, to), stempairs = findpairing((current, next), stem)
                 layoutstem(from, to, current, next, stempairs, circle)
             end
@@ -115,6 +115,8 @@ function layoutmodified(rnabase::RNABaseGraph;sidelength=1.0,stemlength=0.5)
 
             numberings[high] = coords[high] + (coords[high] - coords[low])/2
             numberings[low] = coords[low] + (coords[low] - coords[high])/2
+
+            push!(seenpairs, (low, high))
         end
 
         toloop = loops[to]
