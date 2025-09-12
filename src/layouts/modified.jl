@@ -54,7 +54,7 @@ function layoutmodified(rnabase::RNABaseGraph;sidelength=1.0,stemlength=0.5)
     seenpairs = []
 
     function layoutloop(treevertex, circle)
-        loop = loops[treevertex]
+        loop = sort(loops[treevertex])
         loopsize = length(loop)
 
         # loop through possible pairs attached to loop and calculate their layout 
@@ -120,7 +120,7 @@ function layoutmodified(rnabase::RNABaseGraph;sidelength=1.0,stemlength=0.5)
             push!(seenpairs, (low, high))
         end
 
-        toloop = loops[to]
+        toloop = sort(loops[to])
         toloopsize = length(toloop)
         
         # calculate dimensions for the circle of the next loop
@@ -135,7 +135,7 @@ function layoutmodified(rnabase::RNABaseGraph;sidelength=1.0,stemlength=0.5)
     end
 
     function layoutsinglestrands(treevertex, circle)
-        loop = loops[treevertex]
+        loop = sort(loops[treevertex])
         loopsize = length(loop)
         
         attachedpairs = []
