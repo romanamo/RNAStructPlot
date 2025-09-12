@@ -44,12 +44,13 @@ function layoutmodified(rnabase::RNABaseGraph;sidelength=1.0,stemlength=0.5)
 
     circular = layoutcircular(rnabase)
 
-    loops = sort(map(sort, collect(values(rnatree.loopbases)));by=minimum)
+    loops = rnabase.tree.loopbases
     stem = rnatree.regionpairs
 
     coords = Dict(v => [0.0, 0.0] for v in vertices(rnabase.graph))
     numberings = Dict(v => [0.0, 0.0] for v in vertices(rnabase.graph))
 
+    start = minimum(vertices(rnabase.tree.graph))
     seenpairs = []
 
     function layoutloop(treevertex, circle)
@@ -179,8 +180,8 @@ function layoutmodified(rnabase::RNABaseGraph;sidelength=1.0,stemlength=0.5)
         end
     end
 
-    startcircle = LoopCircle(sidelength/(2*sin(pi/length(loops[1]))), [0., 0.])
-    layoutloop(1, startcircle)
+    startcircle = LoopCircle(sidelength/(2*sin(pi/length(loops[start]))), [0., 0.])
+    layoutloop(start, startcircle)
 
     return DrawResult(coords, numberings)
 end
