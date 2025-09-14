@@ -61,17 +61,17 @@ There may be overlaps in the layout.
 """
 function layoutpolygonal(rnabase::RNABaseGraph;sidelength::Float64=1.0,stemlength::Float64=0.5)::DrawResult
     rnatree = rnabase.tree
-    loops = sort(map(sort, collect(values(rnatree.loopbases)));by=minimum)
+    loops = rnabase.tree.loopbases
     stem = rnatree.regionpairs
 
     coords = Dict()
     numberings = Dict()
     seenpairs = []
     
-    start = minimum(vertices(rnabase.graph))
+    start = minimum(vertices(rnabase.tree.graph))
 
     function layoutloop(treevertex, polygon)
-        loop = loops[treevertex]
+        loop = sort(loops[treevertex])
         loopsize = length(loop)
         polygonpoints = points(polygon)
         # set base pair in loop to corner in polygon
